@@ -63,9 +63,12 @@ python inference.py --model_path /path/to/pretrained_model \
                     --output_dir /path/to/restored_results \
                     --task deblur # or denoise, dehaze, etc.
 
-Citation
+
+
+## ✍️ Citation
 If you find this work useful in your research, please consider citing our paper:
 
+```bibtex
 @InProceedings{Liu_2025_CVPR,
     author    = {Liu, Yidi and Li, Dong and Fu, Xueyang and Lu, Xin and Huang, Jie and Zha, Zheng-Jun},
     title     = {UHD-processer: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts},
@@ -74,3 +77,4 @@ If you find this work useful in your research, please consider citing our paper:
     year      = {2025},
     pages     = {23121-23130}
 }
+```
