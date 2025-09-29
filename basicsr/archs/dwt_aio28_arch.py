@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import sys 
-sys.path.append("/code/UHD-allinone")
-from basicsr.archs.VAE_arch import AutoencoderKL
+sys.path.append("/fs-computility/ai4sData/liuyidi/code/UHD-processer")
+# from basicsr.archs.VAE_arch import AutoencoderKL
 import time
 import yaml
 from basicsr.utils.vae_util import instantiate_from_config
@@ -11,10 +11,10 @@ from basicsr.utils.vae_util import instantiate_from_config
 from basicsr.utils.registry import ARCH_REGISTRY
 import math
 from basicsr.utils.distributions.distributions import DiagonalGaussianDistribution
-from basicsr.archs.encoder import nonlinearity, Normalize, ResnetBlock, make_attn, Downsample, Upsample
+# from basicsr.archs.encoder import nonlinearity, Normalize, ResnetBlock, make_attn, Downsample, Upsample
 from basicsr.archs.wtconv import WTConv2d
 from einops import rearrange
-from basicsr.archs.Fourier_Upsampling import freup_Areadinterpolation,freup_AreadinterpolationV2,freup_Cornerdinterpolation,freup_Periodicpadding
+# from basicsr.archs.Fourier_Upsampling import freup_Areadinterpolation,freup_AreadinterpolationV2,freup_Cornerdinterpolation,freup_Periodicpadding
 from basicsr.archs.wtconv.util import wavelet
 from basicsr.archs.merge.gate import GatedFeatureEnhancement
 from basicsr.archs.Resblock.Res_four import Res_four,Res_four2,Res_four3,Res_four4,Res_four5,Res_four6,Res_four7,Res_four8,Res_four9,Res_four10,Res_four11,Res_four12
@@ -641,7 +641,7 @@ class Classifier(nn.Module):
         return out
     
     
-@ARCH_REGISTRY.register()
+# @ARCH_REGISTRY.register()
 class dwt_aio28(nn.Module):
     def __init__(self, dim, n_blocks=8, ffn_scale=2.0,dwt_levels=3,only_deg=1, upscaling_factor=4,vae_weight=None,cls_weight=None,deg_num= 7,prompt_scale=2,rank=[4,2,1],rank_scale= None,config=None,sample= True,dwt_dim = 16,num_heads=3,param_key = 'params',out_dim= 64):
         super().__init__()
@@ -1616,11 +1616,11 @@ class Encoder(nn.Module):
 if __name__== '__main__': 
     # x = torch.randn(2, 3, 512, 512).to('cuda')
     import yaml
-    config = yaml.load(open('/code/UHD-allinone/options/debug.yml', 'r'), Loader=yaml.FullLoader)['network_g']
+    config = yaml.load(open('/fs-computility/ai4sData/liuyidi/code/LatentGen/options/all-in-one/6dre/dwt_aio28_6d.yml', 'r'), Loader=yaml.FullLoader)['network_g']
     config.pop('type')
     model = dwt_aio28(**config).to('cuda')
 
-    HF = torch.randn(1, 3, 256, 256).cuda()
+    HF = torch.randn(1, 3, 3280, 2160).cuda()
     from thop.profile import profile
     #计算模型可训练参数量
     param = sum(p.numel() for p in model.parameters())
