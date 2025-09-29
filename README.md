@@ -1,80 +1,130 @@
-# UHD-Processor: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts
-Overview
+# UHD-Processor: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts [CVPR 2025]
 
-UHD-Processor is a unified and robust all-in-one image restoration framework, specifically designed for Ultra-High-Definition (UHD) images with remarkable resource efficiency.
+This repository provides an implementation overview of UHD-Processor, aligned with the CVPR 2025 paper. It includes a method summary, datasets, installation and usage guidance, and citation information for reproduction and extension.
 
-Conventional all-in-one methods often rely on complex restoration backbones when processing UHD images, leading to high computational costs. To address this challenge, our strategy employs a frequency-domain decoupling progressive learning technique, inspired by curriculum learning, to incrementally learn restoration mappings from low to high frequencies. This divide-and-conquer approach utilizes specialized sub-network modules to effectively tackle different frequency bands, significantly enhancing the learning capability of simpler networks.
+- Paper (CVPR 2025): `https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf`
+- Supplementary material: `https://openaccess.thecvf.com/content/CVPR2025/supplemental/Liu_UHD-processer_Unified_UHD_CVPR_2025_supplemental.pdf`
 
-Furthermore, to accommodate the high-resolution characteristics of UHD images, we have developed a framework based on a Variational Autoencoder (VAE), which reduces computational complexity by modeling a concise latent space. It integrates task-specific degradation awareness in the encoder and frequency selection in the decoder, thereby enhancing the model's task comprehension and generalization.
+## Overview
+UHD-Processor is a unified, resource-efficient framework for ultra-high-definition (UHD) image restoration that generalizes across diverse degradations, including denoising, deblurring, dehazing, low-light enhancement, deraining, and desnowing. The framework leverages a variational autoencoder (VAE) to learn in a compact latent space and adopts a progressive frequency learning strategy to stabilize and accelerate optimization from low to high frequencies.
 
-Our unified model is capable of handling a variety of degradations, such as denoising, deblurring, dehazing, low-light enhancement, deraining, and desnowing.
+## Method
+- Progressive Frequency Learning (PFL)
+  - Decomposes the restoration problem into multiple frequency bands.
+  - Trains from easy low-frequency components to harder high-frequency details, improving stability and convergence.
 
-Figure 1: The overall framework of our proposed UHD-Processor.
+- Efficient VAE-based Latent Modeling
+  - Performs restoration primarily in the latent space rather than pixel space, substantially reducing FLOPs and memory.
+  - The encoder is equipped with degradation awareness, while the decoder performs frequency selection and detail synthesis.
 
-Core Features
-Efficient VAE-based Framework: Drastically reduces the computational resources required for UHD image processing by performing restoration tasks within a compact latent space rather than pixel space.
+- Degradation-aware Prompts
+  - DALR (Degradation-Aware Low-Rank Prompt, encoder stage): injects low-rank degradation priors to unify latent modeling across degradation types.
+  - DFSP (Degradation-Specific Frequency Selection Prompt, decoder stage): adaptively fuses high-frequency details and low-frequency structures conditioned on the degradation type.
 
-Frequency-Domain Decoupling Progressive Learning Strategy: Decomposes the complex restoration task into sub-tasks across multiple frequency bands. The model begins learning from easier, low-frequency components and progressively advances to more challenging, high-frequency ones, improving adaptability to diverse optimization objectives.
+According to the paper, UHD-Processor achieves state-of-the-art performance with significantly fewer parameters and FLOPs (e.g., ≈95.1% parameter and ≈97.4% FLOP reductions compared to prior art).
 
-Efficient Adaptive Prompt Learning:
+## Key Features
+- Unified multi-degradation handling in a single model.
+- UHD-friendly efficiency via latent-space learning and progressive frequency training.
+- Prompt-based adaptivity (DALR/DFSP) for degradation- and frequency-aware processing.
+- Strong quality–efficiency tradeoff on UHD benchmarks.
 
-Degradation-Aware Low-Rank Prompt (DALR): During the encoding stage, this prompt assists the VAE in adapting to different degradation types, encoding them into a unified latent space.
+## Datasets
+Download links by degradation category (as referenced in the paper):
 
-Degradation-Specific Frequency Selection Prompt (DFSP): In the decoding stage, this prompt allows the model to adaptively fuse high-frequency details from the encoder with low-frequency information from the decoder, based on the specific degradation type.
+- UHD_deblur (deblurring): `https://drive.google.com/file/d/1-RCHHPMh95Pnm0Wj773QvKpNm9WoZV9l/view?usp=sharing`
+- UHD_haze (dehazing): `https://drive.google.com/file/d/10dFZZMep3k2p3r8houGkKevTw3XaVrtq/view?usp=sharing`
+- UHD_LL (low-light): `https://drive.google.com/file/d/1O31UC6MJ3pHOIPLzXlqHqvcIwgfy18_f/view?usp=sharing`
+- UHD_rain (deraining): `https://drive.google.com/file/d/1jkBnyVKND-f5WZ4mn8c7tnKPekB2qsxJ/view?usp=sharing`
+- UHD_snow (desnowing): `https://drive.google.com/file/d/1rsn-S5EDKo5yw-wlxCjrudx7ih056Ro8/view?usp=sharing`
 
-Superior Performance and Efficiency: In multiple benchmark tests, UHD-Processor achieves state-of-the-art performance while realizing a 95.1% reduction in parameters and a 97.4% reduction in FLOPs compared to existing methods.
+Recommended directory structure (example):
 
-Performance Highlights
-We compared UHD-Processor against state-of-the-art methods in all-in-one settings involving four and six degradation types.
+```
+data/
+  UHD_deblur/
+    train/  val/  test/
+  UHD_haze/
+    train/  val/  test/
+  UHD_LL/
+    train/  val/  test/
+  UHD_rain/
+    train/  val/  test/
+  UHD_snow/
+    train/  val/  test/
+```
 
-All-in-One Restoration Results (Six Degradations)
-Method
+## Installation
+Clone the repository and create the environment:
 
-
-Visual Comparisons
-Figure 2: Visual comparison with other state-of-the-art all-in-one methods on four degradation removal tasks. Our method excels at restoring details and suppressing artifacts.
-
-Installation
-## Clone the repository
+```
 git clone https://github.com/lyd-2022/UHD-processer.git
 cd UHD-processer
 
-## Create and activate a conda environment
-conda create -n uhd_processor python=3.8
+conda create -n uhd_processor python=3.8 -y
 conda activate uhd_processor
 
-## Install dependencies
 pip install -r requirements.txt
+```
 
-Usage
-Training
-Detailed training instructions and scripts will be provided upon code release. The training process is divided into two stages:
+## Usage
+### Training
+The paper adopts a two-stage training pipeline:
+1) Pre-train the VAE on clean images to learn high-quality latent representations.
+2) Train the unified restoration model with the progressive frequency learning schedule and enable DALR/DFSP prompts.
 
-Pre-training the VAE on clean images.
+Full training scripts and configs will be released. Placeholder examples:
 
-Training the complete restoration model using the frequency-domain decoupling progressive learning strategy.
+```
+# Stage 1: VAE pre-training
+python tools/train_vae.py \
+  --config configs/vae/vae_pretrain.yaml \
+  --data_root /path/to/data \
+  --work_dir ./work_dirs/vae_pretrain
 
-Inference
-We will provide pre-trained models for fast inference on new UHD images upon release.
+# Stage 2: Unified restoration training (PFL)
+python tools/train_restoration.py \
+  --config configs/restoration/uhd_processor_pfl.yaml \
+  --data_root /path/to/data \
+  --work_dir ./work_dirs/uhd_processor
+```
 
-## Example inference command (coming soon)
-python inference.py --model_path /path/to/pretrained_model \
-                    --input_dir /path/to/degraded_images \
-                    --output_dir /path/to/restored_results \
-                    --task deblur # or denoise, dehaze, etc.
+### Inference
+Pretrained weights will be provided. Placeholder example:
 
+```
+python inference.py \
+  --model_path /path/to/pretrained.pth \
+  --input_dir  /path/to/degraded_images \
+  --output_dir /path/to/restored_results \
+  --task deblur   # also supports: denoise/dehaze/ll/rain/snow
+```
 
+## Results and Visualization
+- In unified settings (4- and 6-degradation), UHD-Processor outperforms prior methods on standard metrics.
+- Visual comparisons show superior detail restoration and artifact suppression, particularly at high resolutions.
 
-## ✍️ Citation
-If you find this work useful in your research, please consider citing our paper:
+Please refer to the paper and supplementary for complete quantitative tables and figures.
+
+## FAQ
+- High memory footprint? Reduce batch size, enable mixed precision, or use tiled inference for very large inputs.
+- Unstable training? Verify learning rates and PFL schedule; ensure robust VAE convergence in Stage 1.
+- Color shifts or over-smoothing? Tune DFSP weights or frequency gating thresholds to strengthen high-frequency fusion.
+
+## Citation
+If you find this project useful in your research, please consider citing:
 
 ```bibtex
 @InProceedings{Liu_2025_CVPR,
     author    = {Liu, Yidi and Li, Dong and Fu, Xueyang and Lu, Xin and Huang, Jie and Zha, Zheng-Jun},
     title     = {UHD-processer: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts},
-    booktitle = {Proceedings of the Computer Vision and Pattern Recognition Conference (CVPR)},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
     month     = {June},
     year      = {2025},
     pages     = {23121-23130}
 }
 ```
+
+## License and Acknowledgements
+- The license and usage terms for code and pretrained models will follow the forthcoming LICENSE file.
+- We thank the open-source community and dataset contributors for their support.
