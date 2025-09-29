@@ -1,9 +1,9 @@
-# UHD-Processor: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts [CVPR 2025]
+# UHD-Processor: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts [CVPR 2025](https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf)
 
 This repository provides an implementation overview of UHD-Processor, aligned with the CVPR 2025 paper. It includes a method summary, datasets, installation and usage guidance, and citation information for reproduction and extension.
 
-- Paper (CVPR 2025): `https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf`
-- Supplementary material: `https://openaccess.thecvf.com/content/CVPR2025/supplemental/Liu_UHD-processer_Unified_UHD_CVPR_2025_supplemental.pdf`
+- [Paper (CVPR 2025)](https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf)
+- [Supplementary material](https://openaccess.thecvf.com/content/CVPR2025/supplemental/Liu_UHD-processer_Unified_UHD_CVPR_2025_supplemental.pdf)
 
 ## Overview
 UHD-Processor is a unified, resource-efficient framework for ultra-high-definition (UHD) image restoration that generalizes across diverse degradations, including denoising, deblurring, dehazing, low-light enhancement, deraining, and desnowing. The framework leverages a variational autoencoder (VAE) to learn in a compact latent space and adopts a progressive frequency learning strategy to stabilize and accelerate optimization from low to high frequencies.
@@ -32,27 +32,13 @@ According to the paper, UHD-Processor achieves state-of-the-art performance with
 ## Datasets
 Download links by degradation category (as referenced in the paper):
 
-- UHD_deblur (deblurring): `https://drive.google.com/file/d/1-RCHHPMh95Pnm0Wj773QvKpNm9WoZV9l/view?usp=sharing`
-- UHD_haze (dehazing): `https://drive.google.com/file/d/10dFZZMep3k2p3r8houGkKevTw3XaVrtq/view?usp=sharing`
-- UHD_LL (low-light): `https://drive.google.com/file/d/1O31UC6MJ3pHOIPLzXlqHqvcIwgfy18_f/view?usp=sharing`
-- UHD_rain (deraining): `https://drive.google.com/file/d/1jkBnyVKND-f5WZ4mn8c7tnKPekB2qsxJ/view?usp=sharing`
-- UHD_snow (desnowing): `https://drive.google.com/file/d/1rsn-S5EDKo5yw-wlxCjrudx7ih056Ro8/view?usp=sharing`
+- [UHD_deblur (deblurring)](https://drive.google.com/file/d/1-RCHHPMh95Pnm0Wj773QvKpNm9WoZV9l/view?usp=sharing)
+- [UHD_haze (dehazing)](https://drive.google.com/file/d/10dFZZMep3k2p3r8houGkKevTw3XaVrtq/view?usp=sharing)
+- [UHD_LL (low-light)](https://drive.google.com/file/d/1O31UC6MJ3pHOIPLzXlqHqvcIwgfy18_f/view?usp=sharing)
+- [UHD_rain (deraining)](https://drive.google.com/file/d/1jkBnyVKND-f5WZ4mn8c7tnKPekB2qsxJ/view?usp=sharing)
+- [UHD_snow (desnowing)](https://drive.google.com/file/d/1rsn-S5EDKo5yw-wlxCjrudx7ih056Ro8/view?usp=sharing)
 
-Recommended directory structure (example):
 
-```
-data/
-  UHD_deblur/
-    train/  val/  test/
-  UHD_haze/
-    train/  val/  test/
-  UHD_LL/
-    train/  val/  test/
-  UHD_rain/
-    train/  val/  test/
-  UHD_snow/
-    train/  val/  test/
-```
 
 ## Installation
 Clone the repository and create the environment:
@@ -104,12 +90,7 @@ python inference.py \
 - In unified settings (4- and 6-degradation), UHD-Processor outperforms prior methods on standard metrics.
 - Visual comparisons show superior detail restoration and artifact suppression, particularly at high resolutions.
 
-Please refer to the paper and supplementary for complete quantitative tables and figures.
-
-## FAQ
-- High memory footprint? Reduce batch size, enable mixed precision, or use tiled inference for very large inputs.
-- Unstable training? Verify learning rates and PFL schedule; ensure robust VAE convergence in Stage 1.
-- Color shifts or over-smoothing? Tune DFSP weights or frequency gating thresholds to strengthen high-frequency fusion.
+Please refer to the [paper](https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf) and [supplementary](https://openaccess.thecvf.com/content/CVPR2025/supplemental/Liu_UHD-processer_Unified_UHD_CVPR_2025_supplemental.pdf) for complete quantitative tables and figures.
 
 ## Citation
 If you find this project useful in your research, please consider citing:
