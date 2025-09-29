@@ -1,7 +1,6 @@
 # UHD-Processor: Unified UHD Image Restoration with Progressive Frequency Learning and Degradation-aware Prompts [CVPR 2025](https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf)
 
-This repository provides an implementation overview of UHD-Processor, aligned with the CVPR 2025 paper. It includes a method summary, datasets, installation and usage guidance, and citation information for reproduction and extension.
-
+This repository provides an implementation overview of UHD-Processor, aligned with the CVPR 2025 paper.
 - [Paper (CVPR 2025)](https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf)
 - [Supplementary material](https://openaccess.thecvf.com/content/CVPR2025/supplemental/Liu_UHD-processer_Unified_UHD_CVPR_2025_supplemental.pdf)
 
