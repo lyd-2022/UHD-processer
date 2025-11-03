@@ -1,0 +1,214 @@
+# GENERATE TIME: Fri Nov  1 08:44:21 2024
+# CMD:
+# /code/UHD-allinone/basicsr/train.py -opt /code/UHD-allinone/options/all-in-one/4dre/VAE4dm_ft2.yml --launcher pytorch
+
+# GENERATE TIME: Sat Oct 26 17:03:58 2024
+# CMD:
+# /code/UHD-allinone/basicsr/train.py -opt /code/UHD-allinone/options/all-in-one/4dre/8_16_RA.yml
+
+# GENERATE TIME: Sat Jul 27 17:26:22 2024
+# CMD:
+# /code/UHDformer-main/basicsr/train.py -opt /code/UHDformer-main/options/VAE/restormer+frepad/8_16_res.yml
+
+# GENERATE TIME: Thu Jul 18 15:46:51 2024
+# CMD:
+# /code/UHDformer-main/basicsr/train.py -opt /code/UHDformer-main/options/VAE/restormer+frepad/8_16.yml
+
+# GENERATE TIME: Sun Jul 14 04:27:16 2024
+# CMD:
+# /code/UHDformer-main/basicsr/train.py -opt /code/UHDformer-main/options/VAE/restormer+frepad/8_16.yml
+
+# general settings
+name: VAE|4deg*8_ft2(2)
+# name: debug
+model_type: VAEModel
+scale: &upscale 1
+num_gpu: 8 # set num_gpu: 0 for cpu mode
+manual_seed: 0
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: General_Image_Train
+    type: SinglecropImageDataset
+    root_file: /code/UHD-allinone/data_list/vae/deg4.txt
+    rand_num: 9
+
+    io_backend:
+      type: disk
+
+    gt_size: 512
+    use_resize_crop: False
+    use_flip: False
+    use_rot: False
+
+    # data loader
+    use_shuffle: true
+    geometric_augs: True
+    batch_size_per_gpu: &bsz 1
+    num_worker_per_gpu: *bsz
+    dataset_enlarge_ratio: 1
+
+    prefetch_mode: cpu
+    num_prefetch_queue: *bsz
+
+  val:
+    name: General_Image_Valid
+    type: SingleImageDataset
+    dataroot_lq: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_LL/testing_crop_set/gt
+    gt_size: 512
+    io_backend:
+      type: disk
+    geometric_augs: True
+    use_resize_crop: False
+    use_flip: False
+    use_rot: False
+
+# network structures
+network_g:
+  type: AutoencoderKL_freup2
+  embed_dim: 16
+  # lossconfig:
+  #   target: ldm.modules.losses.LPIPSWithDiscriminator
+  #   params:
+  #     disc_start: 50001
+  #     kl_weight: 1.0e-06
+  #     disc_weight: 0.5
+  ddconfig:
+    double_z: true
+    z_channels: 4
+    resolution: 256
+    in_channels: 3
+    out_ch: 3
+    ch: 16
+    ch_mult:
+    - 1
+    - 2
+    - 4
+    - 4
+    num_res_blocks: 2
+    # attn_resolutions: []
+    attn_resolutions:
+    - 32
+    - 64
+    # - 128
+    # - 256
+    attn_type: restormer
+    res_type: Res_four9
+    dropout: 0.0
+    freup_type: pad
+
+  optim:
+    lr: 0.00005
+
+# network_d:
+#   type: UNetDiscriminatorSN
+#   num_in_ch: 3
+#   num_feat: 64
+#   skip_connection: True
+
+# path
+path:
+  pretrain_network_hq: ~
+  pretrain_network_g: /model/liuyidi/VAE/UHD-allinone/experiments/VAE|4deg*8_ft1/models/net_g_latest.pth
+  pretrain_network_d: ~
+  strict_load: false
+#  resume_state: /data_8T1/wangcong/AAAI24/521-UHDformerDehaze/experiments/014_FeMaSR_LQ_stage/training_states/390000.state
+  resume_state: ~ 
+
+
+# training settings
+train:
+  ema_decay: 0.9
+  optim_g:
+    type: AdamW
+    lr: !!float 2e-4
+    weight_decay: !!float 1e-3
+    betas: [0.9, 0.99]
+  optim_d:
+    type: Adam
+    lr: !!float 4e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: CosineAnnealingRestartCyclicLR
+    periods: [1000, 30000]
+    restart_weights: [1, 1]
+    eta_mins: [0.0002, 0.0000005]
+
+  total_iter: 31000
+  warmup_iter: -1  # no warm up
+
+  # losses
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0 
+    reduction: mean
+  # pixel_ssim_opt:
+  #   loss_weight: !!float 0.25
+  kl_opt:
+    type: KlLoss
+    loss_weight: 1.0e-06
+
+  fft_opt:
+    type: FFTLoss
+    loss_weight: !!float 0.1
+
+
+  perceptual_opt:
+    type: LPIPSLoss
+    loss_weight: !!float 0.5
+    
+  gan_opt:
+    type: GANLoss
+    gan_type: hinge
+    real_label_val: 1.0
+    fake_label_val: 0.0
+    loss_weight: 0
+
+  # codebook_opt:
+  #   loss_weight: 0
+  
+  # semantic_opt:
+  #   loss_weight: 0
+
+  net_d_iters: 1
+  net_d_init_iters: !!float 0 
+
+# validation settings·
+val:
+  val_freq: !!float 3000
+  save_img: false
+
+  key_metric: ssim
+  metrics:
+    psnr: # metric name, can be arbitrary
+      type: psnr 
+      crop_border: 4
+      test_y_channel: true
+    ssim:
+      type: ssim 
+      crop_border: 4
+      test_y_channel: true
+    # lpips:
+    #   type: lpips 
+    #   better: lower
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: !!float 1e9
+  save_latest_freq: !!float 1e4
+  show_tf_imgs_freq: !!float 5000
+  use_tb_logger: true
+
+  wandb:
+    project: UHD-allinone
+    resume_id: ~
+    # resume_id: ovyevsbi
+
+dist_params:
+  backend: nccl
+  port: 16500 #29500
+find_unused_parameters: true

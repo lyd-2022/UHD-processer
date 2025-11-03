@@ -1,0 +1,142 @@
+# GENERATE TIME: Sun Oct 27 08:17:41 2024
+# CMD:
+# /code/UHD-allinone/basicsr/train_cls.py -opt /code/UHD-allinone/options/all-in-one/6dre/cls_6.yml --launcher pytorch
+
+# GENERATE TIME: Sun Oct 27 04:32:42 2024
+# CMD:
+# /code/UHD-allinone/basicsr/train_cls.py -opt /code/UHD-allinone/options/all-in-one/6dre/cls_6.yml --launcher pytorch
+
+# GENERATE TIME: Sat Oct 26 10:44:42 2024
+
+
+name: Cls_deg6_50k*8
+# name: debug
+model_type: ClassModel
+scale: 1
+num_gpu: 8
+manual_seed: 0
+datasets:
+  train:
+    name: DF2K
+    type: classcleanDataset
+    io_backend:
+      type: disk
+
+    data_file_dir: /code/UHD-allinone/data_list/
+
+    de_type: ['denoise_50','derain', 'dehaze', 'deblur', 'enhance','snow','clean']
+    de_type_scale: [6,6,6,6,6,6,1]
+    denoise_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_noise/tarin_crop/
+    denoise_list: /code/UHD-allinone/data_list/noisy/denoise.txt
+    bulr_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_deblur/train/train_crop/
+    bulr_list: /code/UHD-allinone/data_list/bulr/bulr.txt
+    enhance_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_LL/train_crop/
+    enhance_list: /code/UHD-allinone/data_list/ll/ll.txt
+    dehaze_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_haze/train/train_crop/
+    dehaze_list: /code/UHD-allinone/data_list/hazy/hazy.txt
+    derain_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_rain/train_crop/
+    derain_list: /code/UHD-allinone/data_list/rainy/rainTrain.txt
+    snow_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_snow/train_crop/
+    snow_list: /code/UHD-allinone/data_list/snow/snow_train.txt
+
+    
+    # clean_list: /code/UHD-allinone/data_list/clean/clean.txt
+
+
+    gt_size: 256
+    use_flip: true
+    use_rot: true
+    num_worker_per_gpu: 4
+    batch_size_per_gpu: 128
+    dataset_enlarge_ratio: 1
+    prefetch_mode: null
+
+
+
+  val:
+    train:
+    name: DF2K
+    type: classvalcleanDataset
+    io_backend:
+      type: disk
+
+    data_file_dir: /code/UHD-allinone/data_list/
+    de_type_scale: [1,1,1,1,1,1,0.5]
+    # de_type_scale: [0.01,0.01,0.01,0.01,0.01,0.01,0.5]
+
+    de_type: ['denoise_50','derain', 'dehaze', 'deblur', 'enhance','snow','clean']
+    denoise_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_noise/test_crop/
+    denoise_list: /code/UHD-allinone/data_list/noisy/noise_val.txt
+    bulr_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_deblur/test/test_crop/
+    bulr_list: /code/UHD-allinone/data_list/bulr/bulr_val.txt
+    enhance_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_LL/testing_crop_set/
+    enhance_list: /code/UHD-allinone/data_list/ll/ll_val.txt
+    dehaze_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_haze/test/test_crop/
+    dehaze_list: /code/UHD-allinone/data_list/hazy/hazy_val.txt
+    derain_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_rain/testcrop/
+    derain_list: /code/UHD-allinone/data_list/rainy/rain_val.txt
+    snow_dir: /data/liuyidi/nitre_2023_dehaze/data_dehaze/UHD_snow/testcrop/
+    snow_list: /code/UHD-allinone/data_list/snow/snow_val.txt
+
+
+    gt_size: 1024
+    use_flip: true
+    use_rot: true
+    num_worker_per_gpu: 1
+    batch_size_per_gpu: 128
+    dataset_enlarge_ratio: 1
+    prefetch_mode: null
+
+
+network_g:
+  type: Classifier
+  class_num: 7
+
+
+path:
+  pretrain_network_g: ~
+  param_key_g: params
+  strict_load_g: true
+  resume_state: ~
+train:
+  ema_decay: 0.999
+  optim_g:
+    type: Adam
+    lr: 0.001
+    weight_decay: 0
+    betas:
+    - 0.9
+    - 0.99
+  scheduler:
+    type: CosineAnnealingRestartLR
+    periods:
+    - 50000
+    restart_weights:
+    - 1
+    eta_min: 1.0e-07
+  total_iter: 50000
+  warmup_iter: -1
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0
+    reduction: mean
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 5000.0
+  use_tb_logger: true
+  wandb:
+    project: UHD-allinone
+    # resume_id: null
+    resume_id: vh68a9xj
+dist_params:
+  backend: nccl
+  port: 29500
+
+val:
+  val_freq: 5000
+  save_img: true
+  metrics:
+    psnr:
+      type: calculate_psnr
+      crop_border: 4
+      test_y_channel: false
