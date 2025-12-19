@@ -1,0 +1,17 @@
+PyWavelets
+scikit-learn
+wandb
+packaging
+lpips
+opencv-python
+einops
+scikit-image
+torchmetrics
+omegaconf
+imgaug
+sentencepiece
+icecream
+pandas
+timm
+matplotlib
+lmdb

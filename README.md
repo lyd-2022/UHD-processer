@@ -61,24 +61,25 @@ The paper adopts a two-stage training pipeline:
 Full training scripts and configs will be released. Placeholder examples:
 
 ```
-# Stage 1: VAE pre-training
-python tools/train_vae.py \
-  --config configs/vae/vae_pretrain.yaml \
-  --data_root /path/to/data \
-  --work_dir ./work_dirs/vae_pretrain
+# Stage 1: VAE and classfier pre-training
+
+
+python basicsr/train_cls.py \
+  --config weight/four_deg/Cls_4d.yml
+
+python basicsr/train.py \
+  --config weight/four_deg/VAE_4d.yml
 
 # Stage 2: Unified restoration training (PFL)
-python tools/train_restoration.py \
-  --config configs/restoration/uhd_processor_pfl.yaml \
-  --data_root /path/to/data \
-  --work_dir ./work_dirs/uhd_processor
+python basicsr/train_fgt.py \
+  --config weight/four_deg/train_4d.yml \
 ```
 
 ### Inference
 Pretrained weights will be provided. Placeholder example:
 
 ```
-python inference.py \
+python basicsr/inference.py \
   --model_path /path/to/pretrained.pth \
   --input_dir  /path/to/degraded_images \
   --output_dir /path/to/restored_results \
