@@ -4,7 +4,7 @@ This repository provides an implementation overview of UHD-Processor, aligned wi
 - [Paper (CVPR 2025)](https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_UHD-processer_Unified_UHD_Image_Restoration_with_Progressive_Frequency_Learning_and_CVPR_2025_paper.pdf)
 - [Supplementary material](https://openaccess.thecvf.com/content/CVPR2025/supplemental/Liu_UHD-processer_Unified_UHD_CVPR_2025_supplemental.pdf)
 
-## Overview_1
+## Overview
 UHD-Processor is a unified, resource-efficient framework for ultra-high-definition (UHD) image restoration that generalizes across diverse degradations, including denoising, deblurring, dehazing, low-light enhancement, deraining, and desnowing. The framework leverages a variational autoencoder (VAE) to learn in a compact latent space and adopts a progressive frequency learning strategy to stabilize and accelerate optimization from low to high frequencies.
 
 ## Method
