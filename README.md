@@ -36,6 +36,7 @@ Download links by degradation category (as referenced in the paper):
 - [UHD_LL (low-light)](https://drive.google.com/file/d/1O31UC6MJ3pHOIPLzXlqHqvcIwgfy18_f/view?usp=sharing)
 - [UHD_rain (deraining)](https://drive.google.com/file/d/1jkBnyVKND-f5WZ4mn8c7tnKPekB2qsxJ/view?usp=sharing)
 - [UHD_snow (desnowing)](https://drive.google.com/file/d/1rsn-S5EDKo5yw-wlxCjrudx7ih056Ro8/view?usp=sharing)
+- [UHD_noise (desnoising)](https://drive.google.com/file/d/1Ar8QYk2SNJi30RGCN5h-P_4cEytZ4fjD/view?usp=sharing)
 
 
 
