@@ -135,10 +135,10 @@ network_g:
   ffn_scale: 2.0
   upscaling_factor: 4
   num_heads: 3
-  vae_weight: /model/liuyidi/VAE/UHD-allinone/experiments/VAE|6deg*8_ft2/models/net_g_latest.pth
-  cls_weight: /model/liuyidi/VAE/UHD-allinone/experiments/Cls_deg6_50k*8/models/net_g_latest.pth
+  vae_weight: /mnt/shared-storage-user/liuyidi/Code/UHD-processer/weight/six_deg/VAE_6d.pth
+  cls_weight: /mnt/shared-storage-user/liuyidi/Code/UHD-processer/weight/six_deg/cls_6d.pth
   prompt_scale: 4
-  config: /model/liuyidi/VAE/UHD-allinone/experiments/VAE|6deg*8_ft2/VAE_6dm_ft2.yml
+  config: /mnt/shared-storage-user/liuyidi/Code/UHD-processer/weight/six_deg/VAE_6d.yml
   # vae_weight: /data/liuyidi/nitre_2023_dehaze/data_dehaze/uhdformer/experiments/120kema_resfour/models/net_g_latest.pth
   # config: /data/liuyidi/nitre_2023_dehaze/data_dehaze/uhdformer/experiments/120kema_resfour/8_16_res.yml
   sample: True

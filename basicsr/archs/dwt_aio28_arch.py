@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import sys 
-sys.path.append("/fs-computility/ai4sData/liuyidi/code/UHD-processer")
+sys.path.append("/mnt/shared-storage-user/liuyidi/Code/UHD-processer")
 # from basicsr.archs.VAE_arch import AutoencoderKL
 import time
 import yaml
@@ -11,10 +11,10 @@ from basicsr.utils.vae_util import instantiate_from_config
 from basicsr.utils.registry import ARCH_REGISTRY
 import math
 from basicsr.utils.distributions.distributions import DiagonalGaussianDistribution
-# from basicsr.archs.encoder import nonlinearity, Normalize, ResnetBlock, make_attn, Downsample, Upsample
+from basicsr.archs.encoder import nonlinearity, Normalize, ResnetBlock, make_attn, Downsample, Upsample
 from basicsr.archs.wtconv import WTConv2d
 from einops import rearrange
-# from basicsr.archs.Fourier_Upsampling import freup_Areadinterpolation,freup_AreadinterpolationV2,freup_Cornerdinterpolation,freup_Periodicpadding
+from basicsr.archs.Fourier_Upsampling import freup_Areadinterpolation,freup_AreadinterpolationV2,freup_Cornerdinterpolation,freup_Periodicpadding
 from basicsr.archs.wtconv.util import wavelet
 from basicsr.archs.merge.gate import GatedFeatureEnhancement
 from basicsr.archs.Resblock.Res_four import Res_four,Res_four2,Res_four3,Res_four4,Res_four5,Res_four6,Res_four7,Res_four8,Res_four9,Res_four10,Res_four11,Res_four12
@@ -1616,7 +1616,7 @@ class Encoder(nn.Module):
 if __name__== '__main__': 
     # x = torch.randn(2, 3, 512, 512).to('cuda')
     import yaml
-    config = yaml.load(open('/fs-computility/ai4sData/liuyidi/code/LatentGen/options/all-in-one/6dre/dwt_aio28_6d.yml', 'r'), Loader=yaml.FullLoader)['network_g']
+    config = yaml.load(open('weight/six_deg/train_6d.yml', 'r'), Loader=yaml.FullLoader)['network_g']
     config.pop('type')
     model = dwt_aio28(**config).to('cuda')
 
